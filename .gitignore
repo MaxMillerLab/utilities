@@ -1,6 +1,7 @@
 /drive
 /datastore
 /temp
+.env
 *.pyc
 *.lyx~
 *.lyx#
