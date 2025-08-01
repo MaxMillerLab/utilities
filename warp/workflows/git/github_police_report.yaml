@@ -1,0 +1,10 @@
+---
+name: GitHub police report
+command: "cd ~/Documents/useful_scripts/git\nsh github_police_report.sh"
+description: Runs a GitHub police report and saves the information
+arguments: []
+tags: []
+source_url: ~
+author: ~
+author_url: ~
+shells: []

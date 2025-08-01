@@ -1,0 +1,9 @@
+repository,issue_number,title,assignees,target_date,days_overdue,status,priority,url
+colonialism,24,Scrape colonial exposure sources,Ukhansky,2025-06-21,41,In review,High,https://github.com/MaxMillerLab/colonialism/issues/24
+colonialism,28,Run NER on colonial exposure documents,Ukhansky,2025-06-26,36,Ready,Medium,https://github.com/MaxMillerLab/colonialism/issues/28
+health,24,Population projection,zihuahe,2025-07-29,3,In progress,Medium,https://github.com/MaxMillerLab/health/issues/24
+foreign_influence,125,Motivating evidence tariffs,MaxMillerLab,2025-07-29,3,Ready,Medium,https://github.com/MaxMillerLab/foreign_influence/issues/125
+health,28,Implement Medicaid receipt regression into simulation,siyusun1108,2025-07-31,1,Ready,Medium,https://github.com/MaxMillerLab/health/issues/28
+democracy,12,Figure out Minimum Datawork to Obtain Main Results,spkim1228,2025-07-31,1,In progress,High,https://github.com/MaxMillerLab/democracy/issues/12
+democracy,10,Checking Figures for JPE Format,spkim1228,2025-07-31,1,In progress,High,https://github.com/MaxMillerLab/democracy/issues/10
+colonialism,30,Revisiting asset pricing implications,"MaxMillerLab,adityadhar0",2025-07-31,1,Ready,Medium,https://github.com/MaxMillerLab/colonialism/issues/30

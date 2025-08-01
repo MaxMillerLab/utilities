@@ -1,0 +1,9 @@
+repository,issue_number,title,assignees,reasons,url
+interest_rate_risk,14,Check housing and stock wealth along income and wealth,MaxMillerLab,No priority set|No status set|No start date|No target completion date,https://github.com/MaxMillerLab/interest_rate_risk/issues/14
+finance_and_dev,80,Convert OCR report text to embeddings,"suproteemsarkar,ChernXiangyu",No start date|No target completion date,https://github.com/MaxMillerLab/finance_and_dev/issues/80
+finance_and_dev,78,Identify and assign entities in multi-entity reports,ChernXiangyu,No start date|No target completion date,https://github.com/MaxMillerLab/finance_and_dev/issues/78
+health,26,Total-obligation exercise outside the simulation,zahrahnabdul,No start date|No target completion date,https://github.com/MaxMillerLab/health/issues/26
+propaganda,5,Newspaper country mentions and sentiment on ProQuest,emilysilcock,No start date|No target completion date,https://github.com/MaxMillerLab/propaganda/issues/5
+colonialism,23,Second pass at model,adityadhar0,No target completion date,https://github.com/MaxMillerLab/colonialism/issues/23
+colonialism,17,OCR and parse petitions data,radvilaspelanis,No target completion date,https://github.com/MaxMillerLab/colonialism/issues/17
+census,2,Create documentation for census data,spkim1228,No priority set,https://github.com/MaxMillerLab/census/issues/2

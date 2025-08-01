@@ -1,0 +1,14 @@
+---
+name: Kill vibetunnel session
+command: "tailscale serve reset\nlsof -i :{{port}} | awk 'NR>1 {print $2}' | xargs -r kill"
+description: Kills an open vibetunnel session
+arguments:
+  - name: port
+    arg_type: Text
+    description: port you want your session on
+    default_value: "4020"
+tags: []
+source_url: ~
+author: ~
+author_url: ~
+shells: []

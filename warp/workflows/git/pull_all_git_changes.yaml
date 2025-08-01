@@ -1,0 +1,10 @@
+---
+name: Pull all git changes
+command: sh ~/Documents/useful_scripts/git/pull_all_repos.sh
+description: Pulls in all changes on all branches.
+arguments: []
+tags: []
+source_url: ~
+author: ~
+author_url: ~
+shells: []

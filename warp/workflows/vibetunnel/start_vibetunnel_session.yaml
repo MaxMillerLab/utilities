@@ -1,0 +1,14 @@
+---
+name: Start vibetunnel session
+command: "nohup vibetunnel --port {{port}} --bind 0.0.0.0 &\ntailscale serve --bg {{port}}"
+description: This starts a vibetunnel session that can be used on my mobile device.
+arguments:
+  - name: port
+    arg_type: Text
+    description: port you want your session on
+    default_value: "4020"
+tags: []
+source_url: ~
+author: ~
+author_url: ~
+shells: []

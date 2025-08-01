@@ -1,0 +1,10 @@
+---
+name: Commit and push changes
+command: ~/Documents/useful_scripts/git/interactive_commit.sh
+description: Commit and push changes to the branch of your choice
+arguments: []
+tags: []
+source_url: ~
+author: ~
+author_url: ~
+shells: []

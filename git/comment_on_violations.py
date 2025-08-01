@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+"""
+Comment on GitHub issues that are in violation according to the police report.
+
+This script reads the police report CSV data and posts comments to issues explaining their violations.
+
+Usage:
+
+- **Dry Run**
+  Shows what comments would be posted without actually posting them:
+  ```bash
+  python3 comment_on_violations_csv.py
+  ```
+
+- **Execute**
+  Actually post comments to all violating issues:
+  ```bash
+  python3 comment_on_violations_csv.py --execute
+  ```
+
+- **Filter by Repository**
+  Only comment on issues in a specific repository:
+  ```bash
+  python3 comment_on_violations_csv.py --filter-repo colonialism
+  ```
+
+- **Filter by Specific Issue**
+  Only comment on a specific issue:
+  ```bash
+  python3 comment_on_violations_csv.py --filter-repo colonialism --filter-issue 24
+  ```
+
+Requirements:
+- GitHub CLI (gh) must be installed and authenticated.
+"""
+
+import csv
+import argparse
+from pathlib import Path
+from typing import Dict, List, Tuple, Set
+import subprocess
+import sys
+
+# GitHub API settings
+GITHUB_ORG = "MaxMillerLab"
+
+class ViolationCommenter:
+    def __init__(self, dry_run=True):
+        self.dry_run = dry_run
+        self.violations = {}
+        
+    def load_csv_violations(self, csv_path: Path, violation_type: str):
+        """Load violations from a CSV file."""
+        if not csv_path.exists():
+            print(f"Warning: CSV file not found: {csv_path}", file=sys.stderr)
+            return
+            
+        with open(csv_path, 'r', newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            
+            for row in reader:
+                repo = row['repository']
+                issue_num = int(row['issue_number'])
+                key = (repo, issue_num)
+                
+                if key not in self.violations:
+                    self.violations[key] = {
+                        'title': row['title'],
+                        'url': row['url'],
+                        'assignees': set(),
+                        'reasons': set()  # Use set to avoid duplicates
+                    }
+                
+                # Parse assignees
+                if row['assignees']:
+                    for assignee in row['assignees'].split(','):
+                        self.violations[key]['assignees'].add(assignee.strip())
+                
+                # Add violation reasons based on type
+                if violation_type == 'stale':
+                    days_inactive = row['days_inactive']
+                    last_updated = row['last_updated']
+                    self.violations[key]['reasons'].add(
+                        f"Issue has been inactive for {days_inactive} days (last updated: {last_updated})"
+                    )
+                
+                elif violation_type == 'without_info':
+                    # Reasons are separated by | in the CSV
+                    if row['reasons']:
+                        for reason in row['reasons'].split('|'):
+                            self.violations[key]['reasons'].add(reason.strip())
+                
+                elif violation_type == 'overdue':
+                    days_overdue = row['days_overdue']
+                    target_date = row['target_date']
+                    self.violations[key]['reasons'].add(
+                        f"Issue is {days_overdue} days overdue (target date was: {target_date})"
+                    )
+    
+    def load_all_violations(self):
+        """Load all violations from the CSV files."""
+        output_dir = Path("output")
+        
+        # Load stale issues
+        self.load_csv_violations(output_dir / "stale_issues.csv", 'stale')
+        
+        # Load issues without info
+        self.load_csv_violations(output_dir / "issues_without_info.csv", 'without_info')
+        
+        # Load overdue issues
+        self.load_csv_violations(output_dir / "overdue_issues.csv", 'overdue')
+    
+    def format_comment(self, repo: str, issue_num: int, violation_data: Dict[str, any]) -> str:
+        """Format a comment for an issue with its violations."""
+        violations = sorted(list(violation_data['reasons']))  # Convert set to sorted list
+        assignees = sorted(list(violation_data['assignees']))  # Convert set to sorted list
+        
+        # Start with mentioning assignees if any
+        comment = ""
+        if assignees:
+            mentions = " ".join([f"@{assignee}" for assignee in assignees])
+            comment = f"{mentions} - "
+        
+        comment += f"""🚨 **GitHub Police Report Violation Notice** 🚨
+
+This issue has been flagged for the following violations:
+
+"""
+        
+        for violation in violations:
+            comment += f"- {violation}\n"
+        
+        comment += f"""
+---
+
+**Action Required:** Please address these violations by:
+1. Updating the issue with the missing information
+2. Providing a status update if the issue has been inactive
+3. Adjusting target dates if the issue is overdue
+
+_This is an automated message generated by the GitHub Police Report._
+"""
+        
+        return comment
+    
+    def comment_on_issue(self, repo: str, issue_num: int, comment: str):
+        """Post a comment to a GitHub issue using gh CLI."""
+        if self.dry_run:
+            print(f"\n[DRY RUN] Would comment on {repo}#{issue_num}:")
+            print("-" * 60)
+            print(comment)
+            print("-" * 60)
+        else:
+            try:
+                # Use gh CLI to comment on the issue
+                cmd = [
+                    "gh", "issue", "comment", str(issue_num),
+                    "--repo", f"{GITHUB_ORG}/{repo}",
+                    "--body", comment
+                ]
+                
+                result = subprocess.run(cmd, capture_output=True, text=True)
+                
+                if result.returncode == 0:
+                    print(f"✅ Successfully commented on {repo}#{issue_num}")
+                else:
+                    print(f"❌ Failed to comment on {repo}#{issue_num}: {result.stderr}")
+                    
+            except Exception as e:
+                print(f"❌ Error commenting on {repo}#{issue_num}: {str(e)}")
+    
+    def run(self, load_data=True):
+        """Main execution method."""
+        if load_data:
+            print("Loading violations from CSV files...")
+            self.load_all_violations()
+        
+        if not self.violations:
+            print("No violations found in the CSV files.")
+            return
+        
+        print(f"\nFound violations for {len(self.violations)} issues.")
+        
+        # Sort by repository and issue number for organized output
+        sorted_violations = sorted(self.violations.items(), key=lambda x: (x[0][0], x[0][1]))
+        
+        for (repo, issue_num), violation_data in sorted_violations:
+            comment = self.format_comment(repo, issue_num, violation_data)
+            self.comment_on_issue(repo, issue_num, comment)
+        
+        if self.dry_run:
+            print(f"\n🔍 DRY RUN COMPLETE - {len(self.violations)} issues would be commented on.")
+            print("Run with --execute to actually post comments.")
+        else:
+            print(f"\n✅ COMPLETE - Commented on {len(self.violations)} issues.")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Comment on GitHub issues in violation")
+    parser.add_argument(
+        "--execute",
+        action="store_true",
+        help="Actually post comments (default is dry run)"
+    )
+    parser.add_argument(
+        "--filter-repo",
+        help="Only comment on issues in a specific repository"
+    )
+    parser.add_argument(
+        "--filter-issue",
+        type=int,
+        help="Only comment on a specific issue number"
+    )
+    
+    args = parser.parse_args()
+    
+    # Check if gh CLI is available
+    try:
+        subprocess.run(["gh", "--version"], capture_output=True, check=True)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print("Error: GitHub CLI (gh) is not installed or not in PATH.")
+        print("Please install it from: https://cli.github.com/")
+        sys.exit(1)
+    
+    # Check if user is authenticated
+    try:
+        subprocess.run(["gh", "auth", "status"], capture_output=True, check=True)
+    except subprocess.CalledProcessError:
+        print("Error: Not authenticated with GitHub CLI.")
+        print("Please run: gh auth login")
+        sys.exit(1)
+    
+    commenter = ViolationCommenter(dry_run=not args.execute)
+    
+    # Apply filters if specified
+    if args.filter_repo or args.filter_issue:
+        commenter.load_all_violations()
+        filtered_violations = {}
+        
+        for (repo, issue_num), violations in commenter.violations.items():
+            if args.filter_repo and repo != args.filter_repo:
+                continue
+            if args.filter_issue and issue_num != args.filter_issue:
+                continue
+            filtered_violations[(repo, issue_num)] = violations
+        
+        commenter.violations = filtered_violations
+        commenter.run(load_data=False)  # Don't reload data since we already filtered
+    else:
+        commenter.run()  # Load data normally
+
+
+if __name__ == "__main__":
+    main()
