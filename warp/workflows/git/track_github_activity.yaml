@@ -1,0 +1,22 @@
+---
+name: Track GitHub activity
+command: "cd ~/Documents/GitHub/utilities/git\ncollect_data={{collect_data}}\nif [ \"$collect_data\" -eq 1 ]; then\n    echo \"Collecting fresh GitHub data...\"\n    python collect_github_data.py\nelse\n    echo \"Using existing data...\"\nfi\npython track_github_activity.py {{user}} --days {{days}} --verbose"
+description: "Tracks chosen user's GitHub activity in my repo"
+arguments:
+  - name: collect_data
+    arg_type: Text
+    description: "if equal to 1, recollect data"
+    default_value: "0"
+  - name: user
+    arg_type: Text
+    description: github username in all lowercase
+    default_value: spkim1228
+  - name: days
+    arg_type: Text
+    description: number of days to go back in time
+    default_value: "2"
+tags: []
+source_url: ~
+author: ~
+author_url: ~
+shells: []

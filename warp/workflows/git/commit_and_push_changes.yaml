@@ -1,6 +1,6 @@
 ---
 name: Commit and push changes
-command: ~/Documents/useful_scripts/git/interactive_commit.sh
+command: ~/Documents/GitHub/utilities/git/interactive_commit.sh
 description: Commit and push changes to the branch of your choice
 arguments: []
 tags: []

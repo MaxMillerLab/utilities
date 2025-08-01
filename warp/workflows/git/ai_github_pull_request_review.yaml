@@ -1,0 +1,134 @@
+---
+type: agent_mode
+name: GitHub pull request review
+query: |
+  # Warp Rules for Pull Request Review
+  
+  ## Overview
+  
+  Please do a thorough pull request review for PRs in the {{repo}} repository. Use GitHub MCP tools and/or GitHub CLI.
+  
+  ### Important Things to Keep in Mind
+  
+  1. My GitHub username is MaxMillerLab
+  2. Assure that the main branch has been merged into the issue branch prior to submitting a pull request
+  3. When writing comments, please be sure to use markdown formatting
+  
+  **Deliverable:**
+  - A final comment on the pull request that summarizes your findings.
+  - All flagged errors should come with suggestions of how to fix them.
+  - You can add reviews to individual scripts if you find issues and want to flag them.
+  
+  ## Code Style Enforcement Rules
+  
+  ### General Principles
+  - **Primary Principle**: Code for the person who will work with your code next
+  - **Code Quality**: All code must be clean, readable, and follow established patterns
+  - **Documentation**: Code should be self-documenting with minimal comments
+  
+  ### Naming Conventions
+  - **ALWAYS** use `underscore_case` for variables, functions, and files
+  - **NEVER** use camelCase, hyphens, or spaces in names
+  - **REQUIRE** meaningful, searchable, and pronounceable names
+  - **ENFORCE** lowercase for all filenames to avoid case-sensitivity issues
+  - **CHECK** that names clearly indicate purpose without abbreviations
+  
+  ### File Organization
+  - **VERIFY** proper directory structure:
+    - `source/` - All code files
+    - `output/` - All generated outputs
+    - `docs/` - Documentation
+    - `datastore/` - Data files
+  - **REQUIRE** numeric prefixes (01_, 02_, etc.) for files that need ordering
+  - **CHECK** that raw data is never modified directly
+  - **ENFORCE** separation of data from visualization (save plot data as CSV)
+  
+  ### Python-Specific Standards
+  - **REQUIRE** main() function pattern showing high-level flow
+  - **ENFORCE** docstrings for all functions
+  - **USE** section separators: `# %%` for logical code sections
+  - **PLACE** all imports at the top, followed by global constants
+  - **PROHIBIT** Jupyter notebooks - use .py files only
+  - **LIMIT** functions to 20 lines maximum
+  - **CHECK** for unit tests covering edge cases
+  
+  ### Stata-Specific Standards
+  - **REQUIRE** header section with metadata
+  - **ENFORCE** `program define` structure for modular code
+  - **REQUIRE** explicit merge validation and documentation
+  - **CHECK** for proper housekeeping section
+  - **VERIFY** all merges are documented with expected results
+  
+  ### Clean Code Principles
+  - **ENFORCE** DRY (Don't Repeat Yourself) - no code duplication
+  - **REQUIRE** functions that do one thing well
+  - **LIMIT** function length to 20 lines
+  - **MINIMIZE** comments - code should explain itself
+  - **COMMENT** only the "why" not the "how"
+  - **REFERENCE** equations and papers in comments when applicable
+  
+  ### Data Handling Rules
+  - **NEVER** modify raw data files
+  - **DOCUMENT** all data transformations
+  - **TRACK** missing values through the entire pipeline
+  - **SAVE** underlying data for all plots as separate CSV files
+  - **VALIDATE** all merges with explicit checks
+  
+  ## Pull Request Review Rules
+  
+  ### Before Creating a Pull Request
+  - **VERIFY** all code runs successfully without errors
+  - **CHECK** code follows all style guidelines above
+  - **ENSURE** working from the latest main branch
+  - **RESOLVE** all merge conflicts
+  - **RUN** linting and type checking if available
+  - **TEST** all changes thoroughly
+  
+  ### Pull Request Format
+  **ENFORCE** the six-part PR comment formula:
+  1. `Closes #[issue_number]` - Link to the issue being closed
+  2. Confirmation that all files have been reviewed
+  3. State purpose: "Replication" or "Correctness" review requested
+  4. Time estimate for review
+  5. Explanation of multi-file changes (if applicable)
+  6. Explanation of merge conflicts (if any)
+  
+  ### Code Review Standards
+  - **VERIFY** all code style guidelines are followed
+  - **CHECK** that code executes successfully
+  - **REVIEW** all changed plots and their underlying data
+  - **ENSURE** deliverables are complete and self-contained
+  - **CONFIRM** README is updated if needed
+  
+  ## Enforcement Guidelines
+  
+  ### For Warp
+  When reviewing or creating code:
+  1. **CHECK** all applicable rules before approving/submitting
+  2. **FLAG** violations with specific rule references
+  3. **SUGGEST** corrections with examples
+  4. **LINK** to relevant documentation for more details
+  5. **REFUSE** to approve PRs with style violations
+  6. **REQUIRE** fixes before proceeding
+  
+  ### Severity Levels
+  - **ERROR**: Must fix before PR approval (style violations, missing requirements)
+  - **WARNING**: Should fix but not blocking (minor improvements)
+  - **INFO**: Suggestions for better practices
+  
+  ### References
+  For detailed information, refer to documentation in the lab manual (`~/Documents/GitHub/lab_manual.wiki`):
+  - Code style: `clean_code/code-style-summary.md`
+  - Python standards: `clean_code/Python-standards.md`
+  - Stata standards: `clean_code/Stata-standards.md`
+  - File organization: `clean_code/File-organization.md`
+  - Clean code: `clean_code/Clean-code-principles.md`
+  - PR process: `github/Creating-pull-requests.md`
+  - Issue workflow: `github/Github-workflow-summary.md`
+  - Communication: `communication/Communicating-with-me-and-the-team.md`"
+description: Reviews open pull requests for repo of my choice
+arguments:
+  - name: repo
+    arg_type: Text
+    description: github repository
+    default_value: ~

@@ -1,0 +1,14 @@
+---
+name: Comment on police report violations
+command: "python ~/Documents/GitHub/utilities/git/comment_on_violations.py --execute --filter-repo {{repo}}"
+description: Looks at GitHub issues and comments on police report violations
+arguments:
+  - name: repo
+    arg_type: Text
+    description: GitHub repository to comment on
+    default_value: ~
+tags: []
+source_url: ~
+author: ~
+author_url: ~
+shells: []

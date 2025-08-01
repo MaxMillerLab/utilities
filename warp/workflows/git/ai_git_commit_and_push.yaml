@@ -1,0 +1,21 @@
+---
+type: agent_mode
+name: Git commit and push
+query: |
+  # Git Commit and Push
+  
+  Commit and push changes in {{repo}} to {{branch}}. The steps are:
+  
+  1. Review all changes and write a detailed comment for the commit.
+  2. If this is a branch linked to an issue, please include the issue number at the start of the commit summary
+  3. Ask me if I want you to comment on the linked issue. I will want this if there are substantial changes. To do this, use either GitHub MCP tools or GitHub CLI.
+description: Commit and push changes to branch of my choosing
+arguments:
+  - name: repo
+    arg_type: Text
+    description: GitHub repository
+    default_value: ~
+  - name: branch
+    arg_type: Text
+    description: current branch that is checked out
+    default_value: current branch
