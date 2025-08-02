@@ -15,6 +15,16 @@ else
     echo
 fi
 
+# Search in projects1
+echo "Searching in /export/projects1/:"
+if [ -d "/export/projects1" ]; then
+    find /export/projects1 -maxdepth 1 -type d -name "mmiller_*" 2>/dev/null | sort
+    echo
+else
+    echo "  /export/projects1 not found or not accessible"
+    echo
+fi
+
 # Search in projects2
 echo "Searching in /export/projects2/:"
 if [ -d "/export/projects2" ]; then
@@ -47,5 +57,5 @@ fi
 
 # Summary count
 echo "=================================================="
-total_count=$(find /export/projects /export/projects2 /export/projects3 /export/projects4 -maxdepth 1 -type d -name "mmiller_*" 2>/dev/null | wc -l)
+total_count=$(find /export/projects /export/projects1 /export/projects2 /export/projects3 /export/projects4 -maxdepth 1 -type d -name "mmiller_*" 2>/dev/null | wc -l)
 echo "Total mmiller_ directories found: $total_count"

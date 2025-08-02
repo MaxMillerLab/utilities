@@ -30,4 +30,8 @@ rclone sync /export/projects3/mmiller_bill_probability "dropbox:hbsgrid/mmiller_
 echo "Syncing mmiller_foreign_influence..."
 rclone sync /export/projects4/mmiller_foreign_influence "dropbox:hbsgrid/mmiller_foreign_influence" --progress
 
+# Ownership chains project
+echo "Syncing mmiller_ownership_chains..."
+rclone sync /export/projects4/mmiller_ownership_chains "dropbox:hbsgrid/mmiller_ownership_chains" --progress
+
 echo "All project spaces synced to Dropbox hbsgrid folder!"
